@@ -28,12 +28,12 @@ var detectNetwork = function(cardNumber) {
   };
 
   if (cardNumber.length === 14 && dcPrefixes.some(testPrefix)) {
- 		return "Diner's Club";
+ 		return "Diner\'s Club";
   } else if (cardNumber.length === 15 && aePrefixes.some(testPrefix)) {
     return "American Express";
   } else if (visaLengths.some(testVisaLength) && prefix[0] === "4") {
   	return "Visa";
   } else if (cardNumber.length === 16 && mcPrefixes.some(testPrefix)) {
-    return "Mastercard";
+    return "MasterCard";
   }
 };
