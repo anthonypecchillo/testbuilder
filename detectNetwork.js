@@ -13,17 +13,33 @@ var detectNetwork = function(cardNumber) {
   // The American Express network always starts with a 34 or 37 and is 15 digits long
 
   // Once you've read this, go ahead and try to implement this function, then return to the console.
-  var prefix = cardNumber[0] + cardNumber[1];
+  var prefix01 = cardNumber[0] + cardNumber[1];
+  var prefix2 = cardNumber[2];
+  var prefix3 = cardNumber[3];
   var dcPrefixes = ["38", "39"];
   var aePrefixes = ["34", "37"];
   var mcPrefixes = ["51", "52", "53", "54", "55"];
+  var discPrefixes = ["65", "644", "645", "646", "647", "648", "649", "6011"];
+  var maesPrefixes = ["5018", "5020", "5038", "6304"];
   var visaLengths = [13, 16, 19];
+  var discLengths = [16, 19];
+  var maesLengths = [12, 13, 14, 15, 16, 17, 18, 19];
+
+  // var testPrefix = function(element) {
+  // 	return element === prefix;
+  // };
 
   var testPrefix = function(element) {
-  	return element === prefix;
-  };
+  	if (element.length === 2) {
+  		return element === prefix01;
+  	} else if (element.length === 3) {
+  		return element === prefix01 + prefix2;
+  	} else {
+  		return element === prefix01 + prefix2 + prefix3;
+  	}
+  };  
 
-  var testVisaLength = function(element) {
+  var testLength = function(element) {
   	return element === cardNumber.length;
   };
 
@@ -31,9 +47,16 @@ var detectNetwork = function(cardNumber) {
  		return "Diner\'s Club";
   } else if (cardNumber.length === 15 && aePrefixes.some(testPrefix)) {
     return "American Express";
-  } else if (visaLengths.some(testVisaLength) && prefix[0] === "4") {
+  } else if (visaLengths.some(testLength) && prefix01[0] === "4") {
   	return "Visa";
   } else if (cardNumber.length === 16 && mcPrefixes.some(testPrefix)) {
     return "MasterCard";
+  } else if (discLengths.some(testLength) && discPrefixes.some(testPrefix)) {
+    return "Discover";
+  } else if (maesLengths.some(testLength) && maesPrefixes.some(testPrefix)) {
+    return "Maestro";
   }
 };
+
+
+// New Idea: Store information in a 'creditCards' object.
