@@ -197,5 +197,55 @@ describe('Maestro', function() {
 });
 
 
-describe('should support China UnionPay')
-describe('should support Switch')
+describe('should support China UnionPay', function() {
+  var expect = chai.expect;
+
+  var randomOfLength = function(digits) {
+    var suffixDigits = [];
+    for (var i = 1; i <= digits; i++) {
+      suffixDigits.push(Math.floor(Math.random() * 10));
+    }
+    return suffixDigits.join('');
+  };
+
+  for (var length = 16; length <= 19; length++) {
+    (function(length) {
+        for (var prefix3 = 624; prefix3 <= 626; prefix3++) {
+          (function(prefix3) {
+            it('has a prefix of ' + prefix3 + ' and a length of ' + length, function() {
+              expect(detectNetwork(prefix3 + randomOfLength(length - 3))).to.equal('China UnionPay');
+            });
+          })(prefix3);
+        }
+        for (var prefix4 = 6282; prefix4 <= 6288; prefix4++) {
+          (function(prefix4) {
+            it('has a prefix of ' + prefix4 + ' and a length of ' + length, function() {
+              expect(detectNetwork(prefix4 + randomOfLength(length - 4))).to.equal('China UnionPay');
+            });
+          })(prefix4); 
+        }
+        for (var prefix6 = 622126; prefix6 <= 622925; prefix6++) {
+          (function(prefix6) {
+            it('has a prefix of ' + prefix6 + ' and a length of ' + length, function() {
+              expect(detectNetwork(prefix6 + randomOfLength(length - 6))).to.equal('China UnionPay');
+            });
+          })(prefix6);
+        }
+
+      // WHY DOESN'T THIS WORK?
+      // ----------------------
+      // for(var prefix = 224; prefix <= 622925; prefix++) {
+      //   (function(prefix) {
+      //     it('has a prefix of ' + prefix + ' and a length of ' + length, function() {
+      //       expect(detectNetwork(prefix + randomOfLength(length - prefix.toString().length))).to.equal("China UnionPay");
+      //     });
+      //   })(prefix);
+      //   if (prefix === 626) { prefix = 6281; } else if (prefix === 6288) { prefix = 622125; }
+      // }
+    })(length);
+  }
+});
+
+describe('should support Switch', function() {
+  
+});
