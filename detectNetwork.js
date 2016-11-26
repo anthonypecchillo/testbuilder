@@ -16,7 +16,7 @@ var detectNetwork = function(cardNumber) {
   var prefix01 = cardNumber[0] + cardNumber[1];
   var prefix2 = cardNumber[2];
   var prefix3 = cardNumber[3];
-  prefix45 = cardNumber[4] + cardNumber[5];
+  var prefix45 = cardNumber[4] + cardNumber[5];
   var dcPrefixes = ["38", "39"];
   var aePrefixes = ["34", "37"];
   var mcPrefixes = ["51", "52", "53", "54", "55"];
@@ -31,7 +31,7 @@ var detectNetwork = function(cardNumber) {
   var switchLengths = [16, 18, 19];
 
   for (var i = 624; i <= 622925; i++) {
-    cupPrefixes.push(i);
+    cupPrefixes.push(i.toString());
     if (i === 626) { i = 6281; } else if (i === 6288) { i = 622125; }
   }
 
@@ -50,13 +50,11 @@ var detectNetwork = function(cardNumber) {
   var testLength = function(element) {
   	return element === cardNumber.length;
   };
-
+  
   if (cardNumber.length === 14 && dcPrefixes.some(testPrefix)) {
  		return "Diner\'s Club";
   } else if (cardNumber.length === 15 && aePrefixes.some(testPrefix)) {
     return "American Express";
-  } else if (visaLengths.some(testLength) && prefix01[0] === "4") {
-  	return "Visa";
   } else if (cardNumber.length === 16 && mcPrefixes.some(testPrefix)) {
     return "MasterCard";
   } else if (discLengths.some(testLength) && discPrefixes.some(testPrefix)) {
@@ -67,6 +65,8 @@ var detectNetwork = function(cardNumber) {
   	return "China UnionPay";
   } else if (switchLengths.some(testLength) && switchPrefixes.some(testPrefix)) {
     return "Switch";
+  } else if (visaLengths.some(testLength) && prefix01[0] === "4") {
+  	return "Visa";
   }
 };
 
