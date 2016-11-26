@@ -125,7 +125,8 @@ describe('MasterCard', function() {
   // and should, but that's just for learning), so once you've gotten 
   // these tests to pass using should syntax, refactor your tests to 
   // use either expect or should, but not both. 
-  var should = chai.should();
+  
+  // var should = chai.should();
   
   it('has a prefix of 54 and a length of 16', function() {
     expect(detectNetwork('5412345678901234')).to.equal('MasterCard');
@@ -136,59 +137,65 @@ describe('MasterCard', function() {
   });
 });
 
+
 describe('Discover', function() {
   // Tests without a function will be marked as "pending" and not run
   // Implement these tests (and others) and make them pass!
   var expect = chai.expect;
-  
-  it('has a prefix of 65 and a length of 16', function() {
-    expect(detectNetwork('6511123456789012')).to.equal('Discover');
-  });
-  it('has a prefix of 6011 and a length of 16', function() {
-    expect(detectNetwork('6011123456789012')).to.equal('Discover');
-  });
-  it('has a prefix of 65 and a length of 19', function() {
-    expect(detectNetwork('6511123456789012345')).to.equal('Discover');
-  });
-  it('has a prefix of 6011 and a length of 19', function() {
-    expect(detectNetwork('6011123456789012345')).to.equal('Discover');
-  });
-  for (var i = 644; i <= 649; i++) {
-    (function(i) {
-      it('has a prefix of ' + i + ' and a length of 16', function() {
-        expect(detectNetwork(i + '1123456789012')).to.equal('Discover');
-      });
-      it('has a prefix of ' + i + ' and a length of 19', function() {
-        expect(detectNetwork(i + '1123456789012345')).to.equal('Discover');
-      });
-    })(i);
-  }
 
+  var randomOfLength = function(digits) {
+    var suffixDigits = [];
+    for (var i = 1; i <= digits; i++) {
+      suffixDigits.push(Math.floor(Math.random() * 10));
+    }
+    return suffixDigits.join('');
+  };
+
+  for (var length = 16; length <= 19; length+=3) {
+    (function(length) {
+      it('has a prefix of 65 and a length of ' + length.toString(), function() {
+        expect(detectNetwork('65' + randomOfLength(length - 2))).to.equal("Discover");
+      });
+      for (var prefix = 644; prefix <= 649; prefix++) {
+        (function(prefix) {
+          it('has a prefix of ' + prefix + ' and a length of ' + length, function() {
+            expect(detectNetwork(prefix + randomOfLength(length - 3))).to.equal("Discover");
+          });
+        })(prefix);
+      }
+      it('has a prefix of 6011 and a length of ' + length.toString(), function() {
+        expect(detectNetwork('6011' + randomOfLength(length - 4))).to.equal("Discover");
+      });
+    })(length);
+  }
 });
 
 describe('Maestro', function() {
 
   var expect = chai.expect;
   var prefixes = [5018, 5020, 5038, 6304];
-  var suffixDigits = [];
+
+  var randomOfLength = function(digits) {
+    var suffixDigits = [];
+    for (var i = 1; i <= digits; i++) {
+      suffixDigits.push(Math.floor(Math.random() * 10));
+    }
+    return suffixDigits.join('');
+  };  
 
   for (var length = 12; length <= 19; length++) {
-    var random = Math.floor(Math.random() * 10);
-    suffixDigits.push(random);
-    var suffix = suffixDigits.join('');
-    
-    for (var i = 0; i <= 3; i++) {
-      (function(i) {
-        it('has a prefix of ' + prefixes[i] + ' and a length of ' + length, function() {
-          expect(detectNetwork(prefixes[i] + '1234567' + suffix)).to.equal('Maestro');
-        });
-      })(i);
-    }
-  }  
+    (function(length) {    
+      for (var i = 0; i <= 3; i++) {
+        (function(i) {
+          it('has a prefix of ' + prefixes[i] + ' and a length of ' + length, function() {
+            expect(detectNetwork(prefixes[i] + randomOfLength(length - 4))).to.equal('Maestro');
+          });
+        })(i);
+      }
+    })(length);
+  }
 });
+
 
 describe('should support China UnionPay')
 describe('should support Switch')
-
-
-// "65", "644", "645", "646", "647", "648", "649", "6011"
